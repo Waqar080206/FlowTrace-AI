@@ -1,0 +1,5 @@
+export interface Transaction { txn_id: string; timestamp: string; from_acct: string; to_acct: string; amount: number; channel: 'UPI'|'NEFT'|'RTGS'|'IMPS'; branch: string; anomaly_score: number; flag: string }
+export interface GraphNode { id: string; label: string; x: number; y: number; risk: number; color: string; acct_type: string; kyc: string; declared_income: number }
+export interface GraphEdge { source: string; target: string; amount: number; channel: string; color: string }
+export interface Alert { id: string; type: string; accounts: string; score: number; time: string; level: 'high'|'medium' }
+export interface FIUReport { ref: string; entity: string; branch: string; date: string; period: string; amount: number; num_txns: number; primary_acct: string; suspicion_type: string; grounds: string }
