@@ -23,7 +23,7 @@ export default function PathFinderForm({ onFind, loading }: PathFinderFormProps)
             type="text"
             name="from"
             placeholder="e.g., SB-3311"
-            className="w-full px-4 py-2 border border-palette-light-gray rounded-lg text-text-primary focus:outline-none focus:border-palette-blue"
+            className="w-full px-4 py-2 border border-palette-light-gray rounded-lg text-text-primary focus:outline-none focus:border-palette-blue disabled:bg-gray-50 disabled:cursor-not-allowed"
             disabled={loading}
           />
         </div>
@@ -35,7 +35,7 @@ export default function PathFinderForm({ onFind, loading }: PathFinderFormProps)
             type="text"
             name="to"
             placeholder="e.g., SB-5603"
-            className="w-full px-4 py-2 border border-palette-light-gray rounded-lg text-text-primary focus:outline-none focus:border-palette-blue"
+            className="w-full px-4 py-2 border border-palette-light-gray rounded-lg text-text-primary focus:outline-none focus:border-palette-blue disabled:bg-gray-50 disabled:cursor-not-allowed"
             disabled={loading}
           />
         </div>
@@ -44,9 +44,16 @@ export default function PathFinderForm({ onFind, loading }: PathFinderFormProps)
       <button
         type="submit"
         disabled={loading}
-        className="w-full px-4 py-2 bg-palette-blue text-text-secondary rounded-lg font-semibold text-size6 hover:opacity-90 transition disabled:opacity-50"
+        className="w-full px-4 py-2 bg-palette-blue text-text-secondary rounded-lg font-semibold text-size6 hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
-        {loading ? 'Finding Path...' : 'Find Path'}
+        {loading ? (
+          <>
+            <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            Finding Path...
+          </>
+        ) : (
+          'Find Path'
+        )}
       </button>
     </form>
   )

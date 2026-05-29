@@ -4,6 +4,8 @@ import { useState } from 'react'
 import BatchScorerForm from '@/components/tools/BatchScorerForm'
 import BatchScorerResults from '@/components/tools/BatchScorerResults'
 import Card from '@/components/ui/Card'
+import ErrorState, { ErrorAlert } from '@/components/ui/ErrorState'
+import { SkeletonTable } from '@/components/ui/LoadingSkeleton'
 
 interface ScoredAccount {
   id: string
@@ -30,6 +32,7 @@ export default function BatchScorer() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [batchId, setBatchId] = useState<string | null>(null)
+  const [usingDemoData, setUsingDemoData] = useState(false)
 
   const handleScore = async (accountList: string) => {
     const accountIds = accountList
@@ -43,13 +46,14 @@ export default function BatchScorer() {
     }
 
     if (accountIds.length > 100) {
-      setError('Maximum 100 accounts per batch')
+      setError('Maximum 100 accounts per batch. You entered ' + accountIds.length)
       return
     }
 
     setAccounts(accountList)
     setLoading(true)
     setError(null)
+    setUsingDemoData(false)
 
     try {
       // Try to fetch from backend API
@@ -71,6 +75,7 @@ export default function BatchScorer() {
       // Use demo data if API fails
       setResults(DEMO_RESULTS)
       setBatchId(`BATCH-${Date.now()}`)
+      setUsingDemoData(true)
     } finally {
       setLoading(false)
     }
@@ -110,6 +115,23 @@ export default function BatchScorer() {
         <p className="text-text-text5 text-size6 mt-1">Score multiple accounts in bulk to identify high-risk portfolios</p>
       </div>
 
+      {/* Error Alert */}
+      {error && !results.length && (
+        <ErrorAlert 
+          message={error}
+          onDismiss={() => setError(null)}
+          variant="error"
+        />
+      )}
+
+      {/* Demo Data Warning */}
+      {usingDemoData && results.length > 0 && (
+        <ErrorAlert 
+          message="Showing demo results. Backend API is currently unavailable."
+          variant="info"
+        />
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <BatchScorerForm onScore={handleScore} loading={loading} />
@@ -141,26 +163,37 @@ export default function BatchScorer() {
                 onClick={handleExport}
                 className="w-full px-4 py-2 bg-palette-blue text-text-secondary rounded-lg font-semibold text-size6 hover:opacity-90 transition"
               >
-                Export as CSV
+                📥 Export as CSV
               </button>
             </>
+          )}
+
+          {loading && (
+            <Card title="Processing..." className="border-palette-light-gray">
+              <div className="flex items-center justify-center py-8">
+                <div className="h-6 w-6 border-2 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
+              </div>
+            </Card>
           )}
         </div>
       </div>
 
-      {error && !results.length && (
-        <div className="bg-palette-red bg-opacity-10 border border-palette-red rounded-lg p-4 text-palette-red">
-          {error}
-        </div>
+      {/* Loading State */}
+      {loading && (
+        <SkeletonTable rows={6} />
       )}
 
-      {results.length > 0 && (
+      {/* Results */}
+      {!loading && results.length > 0 && (
         <BatchScorerResults results={results} batchId={batchId} />
       )}
 
+      {/* Empty State */}
       {!results.length && !loading && !accounts && (
         <div className="bg-bg-secondary rounded-lg border border-palette-light-gray p-8 text-center">
+          <div className="text-4xl mb-4">📋</div>
           <p className="text-text-text5 text-size6">Paste account IDs or upload a list to get started</p>
+          <p className="text-text-text6 text-size5 mt-2">Supports up to 100 accounts per batch</p>
         </div>
       )}
     </div>

@@ -5,6 +5,8 @@ import AccountSearchForm from '@/components/tools/AccountSearchForm'
 import AccountDetails from '@/components/tools/AccountDetails'
 import TransactionHistory from '@/components/tools/TransactionHistory'
 import LinkedAccounts from '@/components/tools/LinkedAccounts'
+import ErrorState, { ErrorAlert } from '@/components/ui/ErrorState'
+import { SkeletonAccountDetails } from '@/components/ui/LoadingSkeleton'
 
 interface Account {
   id: string
@@ -75,6 +77,7 @@ export default function AccountLookup() {
   const [linkedAccounts, setLinkedAccounts] = useState<LinkedAccount[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [usingDemoData, setUsingDemoData] = useState(false)
 
   const handleSearch = async (query: string) => {
     if (!query.trim()) {
@@ -85,6 +88,7 @@ export default function AccountLookup() {
     setSearchQuery(query)
     setLoading(true)
     setError(null)
+    setUsingDemoData(false)
 
     try {
       // Try to fetch from backend API
@@ -103,6 +107,7 @@ export default function AccountLookup() {
       setAccount(DEMO_ACCOUNT)
       setTransactions(DEMO_TRANSACTIONS)
       setLinkedAccounts(DEMO_LINKED_ACCOUNTS)
+      setUsingDemoData(true)
     } finally {
       setLoading(false)
     }
@@ -119,13 +124,32 @@ export default function AccountLookup() {
         <AccountSearchForm onSearch={handleSearch} loading={loading} />
       </div>
 
+      {/* Validation Error */}
       {error && !account && (
-        <div className="bg-palette-red bg-opacity-10 border border-palette-red rounded-lg p-4 text-palette-red">
-          {error}
+        <ErrorAlert 
+          message={error}
+          onDismiss={() => setError(null)}
+          variant="error"
+        />
+      )}
+
+      {/* Demo Data Warning */}
+      {usingDemoData && account && (
+        <ErrorAlert 
+          message="Showing demo data. Backend API is currently unavailable."
+          variant="info"
+        />
+      )}
+
+      {/* Loading State */}
+      {loading && (
+        <div className="space-y-6">
+          <SkeletonAccountDetails />
         </div>
       )}
 
-      {account && (
+      {/* Results */}
+      {!loading && account && (
         <div className="space-y-6">
           <AccountDetails account={account} />
           
@@ -140,9 +164,25 @@ export default function AccountLookup() {
         </div>
       )}
 
+      {/* Empty State */}
       {!account && !loading && !searchQuery && (
         <div className="bg-bg-secondary rounded-lg border border-palette-light-gray p-8 text-center">
+          <div className="text-4xl mb-4">🔍</div>
           <p className="text-text-text5 text-size6">Search for an account to get started</p>
+          <p className="text-text-text6 text-size5 mt-2">Try searching for SB-3311 or "Rajan Mehta"</p>
+        </div>
+      )}
+
+      {/* Not Found State */}
+      {!loading && error && searchQuery && !account && (
+        <div className="bg-bg-secondary rounded-lg border border-palette-light-gray p-8">
+          <ErrorState
+            title="Account Not Found"
+            message={`We couldn't find an account matching "${searchQuery}". Please check the account ID or name and try again.`}
+            icon="🔎"
+            onRetry={() => handleSearch(searchQuery)}
+            actionLabel="Try Again"
+          />
         </div>
       )}
     </div>

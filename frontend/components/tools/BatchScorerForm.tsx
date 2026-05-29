@@ -90,9 +90,16 @@ SB-4490"
       <button
         type="submit"
         disabled={loading}
-        className="w-full px-4 py-2 bg-palette-blue text-text-secondary rounded-lg font-semibold text-size6 hover:opacity-90 transition disabled:opacity-50"
+        className="w-full px-4 py-2 bg-palette-blue text-text-secondary rounded-lg font-semibold text-size6 hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
-        {loading ? 'Scoring...' : 'Score Accounts'}
+        {loading ? (
+          <>
+            <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            Scoring...
+          </>
+        ) : (
+          'Score Accounts'
+        )}
       </button>
     </form>
   )
