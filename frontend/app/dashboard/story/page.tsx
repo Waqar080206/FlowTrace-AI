@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import StoryBox from '@/components/story/StoryBox'
 import RiskBreakdown from '@/components/story/RiskBreakdown'
@@ -33,7 +33,7 @@ const DEMO_LAYERS = [
   { layer: 'Gen-AI contextual analysis', triggered: true, score: 85 },
 ]
 
-export default function FraudStoryEngine() {
+function FraudStoryEngineContent() {
   const searchParams = useSearchParams()
   const caseId = searchParams.get('case_id') ?? 'CR-0847'
 
@@ -177,5 +177,13 @@ Recommendation: Classify SB-7821 as HIGH RISK. Request additional KYC documents,
         </div>
       </div>
     </div>
+  )
+}
+
+export default function FraudStoryEngine() {
+  return (
+    <Suspense fallback={<div className="text-center py-12 text-text-text5">Loading story...</div>}>
+      <FraudStoryEngineContent />
+    </Suspense>
   )
 }

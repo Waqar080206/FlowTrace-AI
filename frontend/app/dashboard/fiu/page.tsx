@@ -1,26 +1,40 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import FIUForm from '@/components/fiu/FIUForm'
 import FIUPreview from '@/components/fiu/FIUPreview'
 import SubmissionHistory from '@/components/fiu/SubmissionHistory'
 
-const DEMO_SUBMISSIONS = [
+type SubmissionStatus =
+  | 'Submitted'
+  | 'Under review'
+  | 'Accepted'
+  | 'Rejected'
+
+interface Submission {
+  id: string
+  caseId: string
+  type: string
+  date: string
+  status: SubmissionStatus
+  responseDate?: string
+}
+
+const DEMO_SUBMISSIONS: Submission[] = [
   {
     id: 'STR/UBI/2024/0291',
     caseId: 'ST-0291',
     type: 'STR',
     date: '2025-01-11',
-    status: 'Under review' as const,
-    responseDate: undefined,
+    status: 'Under review',
   },
   {
     id: 'STR/UBI/2024/0134',
     caseId: 'DA-0134',
     type: 'STR',
     date: '2025-01-08',
-    status: 'Accepted' as const,
+    status: 'Accepted',
     responseDate: '2025-01-15',
   },
   {
@@ -28,18 +42,18 @@ const DEMO_SUBMISSIONS = [
     caseId: 'CR-0445',
     type: 'CTR',
     date: '2025-01-05',
-    status: 'Accepted' as const,
+    status: 'Accepted',
     responseDate: '2025-01-12',
   },
 ]
 
-export default function FIUReports() {
+function FIUReportsContent() {
   const searchParams = useSearchParams()
   const caseId = searchParams.get('case_id') ?? 'CR-0847'
 
   const [isLoading, setIsLoading] = useState(false)
   const [currentReport, setCurrentReport] = useState<any>(null)
-  const [submissions, setSubmissions] = useState(DEMO_SUBMISSIONS)
+  const [submissions, setSubmissions] = useState<Submission[]>(DEMO_SUBMISSIONS)
 
   const handleGenerate = async (selectedCase: string, reportType: string) => {
     setIsLoading(true)
@@ -76,7 +90,7 @@ export default function FIUReports() {
           caseId: selectedCase,
           type: reportType,
           date: new Date().toLocaleDateString('en-IN'),
-          status: 'Submitted' as const,
+          status: 'Submitted',
         },
         ...prev,
       ])
@@ -123,7 +137,7 @@ Recommended action: Immediate STR filing. Freeze accounts pending investigation.
           caseId: selectedCase,
           type: reportType,
           date: new Date().toLocaleDateString('en-IN'),
-          status: 'Submitted' as const,
+          status: 'Submitted',
         },
         ...prev,
       ])
@@ -175,5 +189,13 @@ Recommended action: Immediate STR filing. Freeze accounts pending investigation.
       {/* Submission History */}
       <SubmissionHistory submissions={submissions} />
     </div>
+  )
+}
+
+export default function FIUReports() {
+  return (
+    <Suspense fallback={<div className="text-center py-12 text-text-text5">Loading FIU reports...</div>}>
+      <FIUReportsContent />
+    </Suspense>
   )
 }

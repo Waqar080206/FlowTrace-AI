@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import ReplayCanvas from '@/components/replay/ReplayCanvas'
 import TxnTable from '@/components/replay/TxnTable'
@@ -61,7 +61,7 @@ const DEMO_REPLAY_DATA = {
   ],
 }
 
-export default function TemporalReplay() {
+function TemporalReplayContent() {
   const searchParams = useSearchParams()
   const caseId = searchParams.get('case_id') ?? 'CR-0847'
 
@@ -135,5 +135,13 @@ export default function TemporalReplay() {
       {/* Transaction Table */}
       <TxnTable transactions={DEMO_REPLAY_DATA.transactions} currentStep={currentStep} />
     </div>
+  )
+}
+
+export default function TemporalReplay() {
+  return (
+    <Suspense fallback={<div className="text-center py-12 text-text-text5">Loading replay...</div>}>
+      <TemporalReplayContent />
+    </Suspense>
   )
 }

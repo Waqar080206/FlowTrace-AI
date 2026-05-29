@@ -20,7 +20,7 @@ export default function HeatmapChart() {
     const chart = new Chart(canvasRef.current, {
       type: 'bar',
       data: {
-        labels: BRANCHES,
+        labels: [...BRANCHES],
         datasets
       },
       options: {

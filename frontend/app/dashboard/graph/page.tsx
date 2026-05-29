@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import GraphCanvas from '@/components/graph/GraphCanvas'
 import NodeInspector from '@/components/graph/NodeInspector'
@@ -45,13 +45,30 @@ interface SelectedNodeData {
   flagged: boolean
 }
 
-interface GraphData {
-  nodes: Array<{ id: string; name?: string; label?: string; risk: number; x: number; y: number }>
-  edges: Array<{ from?: string; source?: string; to?: string; target?: string; amount: number }>
-  patterns?: Array<{ emoji: string; label: string; detail: string }>
+interface GraphNode {
+  id: string
+  name: string
+  label?: string
+  risk: number
+  x: number
+  y: number
 }
 
-export default function GraphExplorer() {
+interface GraphEdge {
+  from: string
+  source?: string
+  to: string
+  target?: string
+  amount: number
+}
+
+interface GraphData {
+  nodes: GraphNode[]
+  edges: GraphEdge[]
+  patterns: Array<{ emoji: string; label: string; detail: string }>
+}
+
+function GraphExplorerContent() {
   const searchParams = useSearchParams()
   const caseId = searchParams.get('case_id') ?? 'CR-0847'
 
@@ -67,34 +84,27 @@ export default function GraphExplorer() {
         setError(null)
         const res = await fetch(`/api/graph?case_id=${caseId}`)
         if (!res.ok) throw new Error('Failed to fetch graph data')
-        let data = await res.json()
-        
-        // Normalize API response (convert 'source'/'target' to 'from'/'to')
-        if (data.edges && data.edges[0]?.source) {
-          data.edges = data.edges.map((e: any) => ({
-            from: e.source,
-            to: e.target,
-            amount: e.amount
-          }))
-        }
-        
-        // Normalize nodes (convert 'label' to 'name')
-        if (data.nodes && data.nodes[0]?.label) {
-          data.nodes = data.nodes.map((n: any) => ({
+        const data = await res.json()
+        const normalizedData: GraphData = {
+          nodes: (data.nodes ?? []).map((n: any) => ({
             id: n.id,
-            name: n.label || n.id,
+            name: n.name || n.label || n.id,
+            label: n.label,
             risk: n.risk,
             x: n.x,
             y: n.y
-          }))
+          })),
+          edges: (data.edges ?? []).map((e: any) => ({
+            from: e.from || e.source,
+            source: e.source,
+            to: e.to || e.target,
+            target: e.target,
+            amount: e.amount
+          })),
+          patterns: data.patterns ?? DEMO_GRAPH_DATA.patterns,
         }
-        
-        // Provide demo patterns if not in response
-        if (!data.patterns) {
-          data.patterns = DEMO_GRAPH_DATA.patterns
-        }
-        
-        setGraphData(data)
+
+        setGraphData(normalizedData)
       } catch (err) {
         console.log("Could not fetch graph data, using demo data.")
         setGraphData(DEMO_GRAPH_DATA)
@@ -157,5 +167,13 @@ export default function GraphExplorer() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function GraphExplorer() {
+  return (
+    <Suspense fallback={<div className="text-center py-12 text-text-text5">Loading graph...</div>}>
+      <GraphExplorerContent />
+    </Suspense>
   )
 }
