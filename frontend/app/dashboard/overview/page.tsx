@@ -18,9 +18,10 @@ export default async function OverviewPage() {
   let metrics = undefined // Uses default inside component
 
   try {
+    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3001'
     const [alertsRes, metricsRes] = await Promise.all([
-      fetch('http://localhost:5000/api/alerts', { cache: 'no-store' }),
-      fetch('http://localhost:5000/api/metrics', { cache: 'no-store' })
+      fetch(`${baseUrl}/api/alerts`, { cache: 'no-store' }),
+      fetch(`${baseUrl}/api/metrics`, { cache: 'no-store' })
     ])
     
     if (alertsRes.ok) alerts = await alertsRes.json()

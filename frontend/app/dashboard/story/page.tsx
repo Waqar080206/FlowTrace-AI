@@ -43,30 +43,82 @@ export default function FraudStoryEngine() {
   const [queryResponse, setQueryResponse] = useState('')
 
   useEffect(() => {
-    // Simulate streaming narrative
-    let index = 0
-    setNarrative('')
-    setIsLoading(true)
+    const fetchNarrative = async () => {
+      try {
+        setNarrative('')
+        setIsLoading(true)
+        
+        const res = await fetch('/api/generate-story', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ case_id: caseId }),
+        })
 
-    const interval = setInterval(() => {
-      if (index < DEMO_NARRATIVE.length) {
-        setNarrative((prev) => prev + DEMO_NARRATIVE[index])
-        index++
-      } else {
-        setIsLoading(false)
-        clearInterval(interval)
+        if (!res.ok) throw new Error('Failed to generate narrative')
+        
+        const reader = res.body?.getReader()
+        const decoder = new TextDecoder()
+        
+        if (reader) {
+          while (true) {
+            const { done, value } = await reader.read()
+            if (done) break
+            
+            const chunk = decoder.decode(value, { stream: true })
+            setNarrative((prev) => prev + chunk)
+          }
+        }
+      } catch (err) {
+        console.log("Could not fetch narrative, using demo data.")
+        // Simulate streaming demo data as fallback
+        let index = 0
+        setNarrative('')
+        const interval = setInterval(() => {
+          if (index < DEMO_NARRATIVE.length) {
+            setNarrative((prev) => prev + DEMO_NARRATIVE[index])
+            index++
+          } else {
+            setIsLoading(false)
+            clearInterval(interval)
+          }
+        }, 5)
       }
-    }, 5)
+      setIsLoading(false)
+    }
 
-    return () => clearInterval(interval)
+    fetchNarrative()
   }, [caseId])
 
   const handleQuery = async (query: string) => {
     setIsQuerying(true)
     setQueryResponse('')
 
-    // Simulate API call and streaming response
-    const mockResponse = `Based on the transaction patterns, account SB-7821 shows several red flags:
+    try {
+      // Try real API first
+      const res = await fetch('/api/generate-story', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ case_id: caseId, query }),
+      })
+
+      if (res.ok && res.body) {
+        const reader = res.body.getReader()
+        const decoder = new TextDecoder()
+        
+        while (true) {
+          const { done, value } = await reader.read()
+          if (done) break
+          
+          const chunk = decoder.decode(value, { stream: true })
+          setQueryResponse((prev) => prev + chunk)
+        }
+      } else {
+        throw new Error('API call failed')
+      }
+    } catch (err) {
+      console.log("Could not fetch query response, using demo data.")
+      // Fallback to demo response
+      const mockResponse = `Based on the transaction patterns, account SB-7821 shows several red flags:
 
 1. **Hub Activity**: SB-7821 appears in 4 of the 6 transactions, acting as a central hub in the circular network. This is typical of structuring schemes where one account coordinates fund redistribution.
 
@@ -78,16 +130,20 @@ export default function FraudStoryEngine() {
 
 Recommendation: Classify SB-7821 as HIGH RISK. Request additional KYC documents, recent income tax returns, and business registration proofs from the account holder.`
 
-    let index = 0
-    const interval = setInterval(() => {
-      if (index < mockResponse.length) {
-        setQueryResponse((prev) => prev + mockResponse[index])
-        index++
-      } else {
-        setIsQuerying(false)
-        clearInterval(interval)
-      }
-    }, 3)
+      let index = 0
+      const interval = setInterval(() => {
+        if (index < mockResponse.length) {
+          setQueryResponse((prev) => prev + mockResponse[index])
+          index++
+        } else {
+          setIsQuerying(false)
+          clearInterval(interval)
+        }
+      }, 3)
+      return
+    }
+    
+    setIsQuerying(false)
   }
 
   return (

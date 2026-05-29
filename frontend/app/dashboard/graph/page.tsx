@@ -45,23 +45,68 @@ interface SelectedNodeData {
   flagged: boolean
 }
 
+interface GraphData {
+  nodes: Array<{ id: string; name?: string; label?: string; risk: number; x: number; y: number }>
+  edges: Array<{ from?: string; source?: string; to?: string; target?: string; amount: number }>
+  patterns?: Array<{ emoji: string; label: string; detail: string }>
+}
+
 export default function GraphExplorer() {
   const searchParams = useSearchParams()
   const caseId = searchParams.get('case_id') ?? 'CR-0847'
 
+  const [graphData, setGraphData] = useState<GraphData>(DEMO_GRAPH_DATA)
   const [selectedNode, setSelectedNode] = useState<SelectedNodeData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    // Simulate API call
-    const timer = setTimeout(() => {
-      setLoading(false)
-    }, 500)
-    return () => clearTimeout(timer)
+    const fetchGraph = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        const res = await fetch(`/api/graph?case_id=${caseId}`)
+        if (!res.ok) throw new Error('Failed to fetch graph data')
+        let data = await res.json()
+        
+        // Normalize API response (convert 'source'/'target' to 'from'/'to')
+        if (data.edges && data.edges[0]?.source) {
+          data.edges = data.edges.map((e: any) => ({
+            from: e.source,
+            to: e.target,
+            amount: e.amount
+          }))
+        }
+        
+        // Normalize nodes (convert 'label' to 'name')
+        if (data.nodes && data.nodes[0]?.label) {
+          data.nodes = data.nodes.map((n: any) => ({
+            id: n.id,
+            name: n.label || n.id,
+            risk: n.risk,
+            x: n.x,
+            y: n.y
+          }))
+        }
+        
+        // Provide demo patterns if not in response
+        if (!data.patterns) {
+          data.patterns = DEMO_GRAPH_DATA.patterns
+        }
+        
+        setGraphData(data)
+      } catch (err) {
+        console.log("Could not fetch graph data, using demo data.")
+        setGraphData(DEMO_GRAPH_DATA)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchGraph()
   }, [caseId])
 
   const handleNodeClick = (nodeId: string) => {
-    const node = DEMO_GRAPH_DATA.nodes.find((n) => n.id === nodeId)
+    const node = graphData.nodes.find((n) => n.id === nodeId)
     if (node) {
       setSelectedNode({
         id: node.id,
@@ -69,7 +114,7 @@ export default function GraphExplorer() {
         risk: node.risk,
         kycStatus: 'Verified',
         declaredIncome: '₹35,000/month',
-        connectedTo: DEMO_GRAPH_DATA.edges.filter((e) => e.from === nodeId || e.to === nodeId).length,
+        connectedTo: graphData.edges.filter((e) => e.from === nodeId || e.to === nodeId).length,
         flagged: node.risk >= 80,
       })
     }
@@ -77,6 +122,10 @@ export default function GraphExplorer() {
 
   if (loading) {
     return <div className="text-center py-12 text-text-text5">Loading graph...</div>
+  }
+
+  if (error) {
+    return <div className="text-center py-12 text-palette-red">{error}</div>
   }
 
   return (
@@ -91,15 +140,15 @@ export default function GraphExplorer() {
           {/* Graph Canvas */}
           <div className="bg-bg-primary rounded-lg border border-palette-light-gray p-4">
             <GraphCanvas
-              nodes={DEMO_GRAPH_DATA.nodes}
-              edges={DEMO_GRAPH_DATA.edges}
+              nodes={graphData.nodes}
+              edges={graphData.edges}
               selectedNode={selectedNode?.id ?? null}
               onNodeClick={handleNodeClick}
             />
           </div>
 
           {/* Pattern Tags */}
-          <PatternTags patterns={DEMO_GRAPH_DATA.patterns} />
+          <PatternTags patterns={graphData.patterns} />
         </div>
 
         {/* Node Inspector (right sidebar) */}

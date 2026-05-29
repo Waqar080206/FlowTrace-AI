@@ -59,36 +59,9 @@ export default function Sidebar() {
 
           {/* Tools section */}
           <SidebarSection title="Tools" collapsed={collapsed}>
-            <div
-              className="px-4 py-3 rounded-lg text-size5 text-text-text5 flex items-center gap-3"
-              title="Coming soon"
-            >
-              <i className="ti ti-search text-size7"></i>
-              {!collapsed && (
-                <>
-                  <span>Account lookup</span>
-                  <span className="ml-auto text-size4 bg-bg-secondary px-1.5 py-0.5 rounded">Soon</span>
-                </>
-              )}
-            </div>
-            <div className="px-4 py-3 rounded-lg text-size5 text-text-text5 flex items-center gap-3" title="Coming soon">
-              <i className="ti ti-network text-size7"></i>
-              {!collapsed && (
-                <>
-                  <span>Path finder</span>
-                  <span className="ml-auto text-size4 bg-bg-secondary px-1.5 py-0.5 rounded">Soon</span>
-                </>
-              )}
-            </div>
-            <div className="px-4 py-3 rounded-lg text-size5 text-text-text5 flex items-center gap-3" title="Coming soon">
-              <i className="ti ti-report-analytics text-size7"></i>
-              {!collapsed && (
-                <>
-                  <span>Batch scorer</span>
-                  <span className="ml-auto text-size4 bg-bg-secondary px-1.5 py-0.5 rounded">Soon</span>
-                </>
-              )}
-            </div>
+            <SidebarLink href="/dashboard/tools/lookup" label="Account lookup" icon="ti-search" collapsed={collapsed} />
+            <SidebarLink href="/dashboard/tools/pathfinder" label="Path finder" icon="ti-network" collapsed={collapsed} />
+            <SidebarLink href="/dashboard/tools/batch" label="Batch scorer" icon="ti-report-analytics" collapsed={collapsed} />
           </SidebarSection>
 
           {/* Reports section */}

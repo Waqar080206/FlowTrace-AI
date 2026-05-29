@@ -69,7 +69,7 @@ export default function FIUPreview({ report, isLoading }: FIUPreviewProps) {
 
         <div className="border-t border-b border-palette-light-gray py-3">
           <p className="text-text-text5 font-semibold">Total Amount:</p>
-          <p className="text-size8 font-extrabold text-palette-red">₹{report.totalAmount.toLocaleString()}</p>
+          <p className="text-size8 font-extrabold text-palette-red">₹{(report?.totalAmount || 0).toLocaleString()}</p>
         </div>
 
         <div>
