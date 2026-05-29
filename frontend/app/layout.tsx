@@ -1,4 +1,5 @@
 import '../styles/globals.css'
+import '../styles/tokens.css'
 import Topbar from '../components/ui/Topbar'
 
 export const metadata = {

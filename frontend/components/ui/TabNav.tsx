@@ -15,17 +15,17 @@ export default function TabNav() {
   ]
 
   return (
-    <div className="border-b bg-gray-100 flex gap-1 px-4 pt-2">
+    <div className="border-b bg-bg-primary flex gap-1 px-4 pt-2 border-palette-light-gray">
       {tabs.map(tab => {
         const isActive = pathname === tab.href
         return (
           <Link
             key={tab.name}
             href={tab.href}
-            className={`rounded-t-lg px-4 py-2 text-sm font-medium ${
+            className={`rounded-md px-4 py-2 text-size6 font-semibold font-poppins transition-all ${
               isActive
-                ? 'bg-white text-blue-900 border-x border-t'
-                : 'text-gray-500 hover:text-gray-800'
+                ? 'bg-bg-bg4 text-text-secondary border-b-2 border-bg-bg4'
+                : 'text-text-text5 hover:text-text-text4'
             }`}
           >
             {tab.name}

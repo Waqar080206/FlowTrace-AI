@@ -1,0 +1,336 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Noto+Sans:wght@400;500;600;700&display=swap');
+
+/* Design Token CSS Custom Properties */
+:root {
+  /* Colors - Background */
+  --color-bg-primary: #FFFFFF;
+  --color-bg-secondary: #BD3D41;
+  --color-bg-3: #E31E24;
+  --color-bg-4: #00569B;
+  --color-bg-5: #444444;
+
+  /* Colors - Text */
+  --color-text-primary: #000000;
+  --color-text-secondary: #FFFFFF;
+  --color-text-3: #006C95;
+  --color-text-4: #444444;
+  --color-text-5: #555555;
+
+  /* Colors - Palette */
+  --color-palette-black: #000000;
+  --color-palette-white: #F1F1F1;
+  --color-palette-blue: #00569B;
+  --color-palette-mixed: #808080;
+  --color-palette-red: #C00000;
+  --color-palette-dark-gray: #101010;
+  --color-palette-light-gray: #D3D3D3;
+
+  /* Typography */
+  --font-poppins: 'Poppins', sans-serif;
+  --font-noto: 'Noto Sans', sans-serif;
+  --font-sans-serif: sans-serif;
+  --font-fontawesome: 'FontAwesome', sans-serif;
+
+  /* Font Sizes */
+  --font-size-1: 10px;
+  --font-size-2: 12.8px;
+  --font-size-3: 12px;
+  --font-size-4: 13.3333px;
+  --font-size-5: 13px;
+  --font-size-6: 14.4px;
+  --font-size-7: 16px;
+  --font-size-8: 16.8px;
+  --font-size-9: 17.92px;
+  --font-size-10: 18.72px;
+
+  /* Border Radius */
+  --radius-sm: 50%;
+  --radius-md: 25px;
+  --radius-lg: 32px;
+  --radius-xl: 100%;
+  --radius-2xl: 30px;
+  --radius-full: 48px;
+
+  /* Shadows */
+  --shadow-sm: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
+  --shadow-md: rgba(0, 0, 0, 0.24) 0px 3px 8px 0px;
+  --shadow-lg: rgba(0, 0, 0, 0.19) 0px 10px 20px 0px, rgba(0, 0, 0, 0.23) 0px 6px 6px 0px;
+  --shadow-xl: rgba(0, 0, 0, 0.2) 0px 8px 16px 0px;
+  --shadow-2xl: rgba(0, 0, 0, 0.25) 0px 4px 8px 0px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-poppins);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-poppins);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.5em;
+}
+
+h1 {
+  font-size: var(--font-size-10);
+}
+
+h2 {
+  font-size: var(--font-size-9);
+}
+
+h3 {
+  font-size: var(--font-size-8);
+}
+
+h4 {
+  font-size: var(--font-size-7);
+}
+
+h5, h6 {
+  font-size: var(--font-size-6);
+}
+
+/* Paragraphs and text */
+p {
+  margin-bottom: 1em;
+  font-size: var(--font-size-7);
+  color: var(--color-text-4);
+}
+
+small {
+  font-size: var(--font-size-3);
+}
+
+/* Links */
+a {
+  color: var(--color-text-3);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--color-bg-4);
+  text-decoration: underline;
+}
+
+/* Buttons */
+button {
+  font-family: var(--font-poppins);
+  cursor: pointer;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.75em 1.5em;
+  font-size: var(--font-size-7);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Form elements */
+input, textarea, select {
+  font-family: var(--font-poppins);
+  font-size: var(--font-size-7);
+  padding: 0.75em;
+  border: 1px solid var(--color-palette-light-gray);
+  border-radius: var(--radius-md);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--color-bg-4);
+  box-shadow: 0 0 0 3px rgba(0, 86, 155, 0.1);
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1em;
+}
+
+th, td {
+  padding: 0.75em;
+  text-align: left;
+  border-bottom: 1px solid var(--color-palette-light-gray);
+}
+
+th {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+/* Code blocks */
+code {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: var(--font-size-3);
+  background-color: var(--color-palette-light-gray);
+  padding: 0.2em 0.4em;
+  border-radius: var(--radius-sm);
+}
+
+pre {
+  background-color: var(--color-palette-dark-gray);
+  color: var(--color-palette-white);
+  padding: 1em;
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  margin-bottom: 1em;
+}
+
+/* Utility classes */
+.text-primary {
+  color: var(--color-text-primary);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.bg-primary {
+  background-color: var(--color-bg-primary);
+}
+
+.bg-secondary {
+  background-color: var(--color-bg-secondary);
+}
+
+.shadow-sm {
+  box-shadow: var(--shadow-sm);
+}
+
+.shadow-md {
+  box-shadow: var(--shadow-md);
+}
+
+.shadow-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+.shadow-xl {
+  box-shadow: var(--shadow-xl);
+}
+
+.shadow-2xl {
+  box-shadow: var(--shadow-2xl);
+}
+
+.rounded-sm {
+  border-radius: var(--radius-sm);
+}
+
+.rounded-md {
+  border-radius: var(--radius-md);
+}
+
+.rounded-lg {
+  border-radius: var(--radius-lg);
+}
+
+.rounded-xl {
+  border-radius: var(--radius-xl);
+}
+
+.rounded-2xl {
+  border-radius: var(--radius-2xl);
+}
+
+.rounded-full {
+  border-radius: var(--radius-full);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-palette-light-gray);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-bg-4);
+  border-radius: var(--radius-md);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-bg-secondary);
+}
+
+/* Selection color */
+::selection {
+  background-color: var(--color-bg-4);
+  color: var(--color-text-secondary);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease-in-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.4s ease-out;
+}

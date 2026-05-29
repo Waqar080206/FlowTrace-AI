@@ -17,20 +17,20 @@ export default function AlertQueue({ alerts }: { alerts: Alert[] }) {
             onClick={() => setSelectedId(alert.id)}
             className={`p-4 rounded-lg border-2 cursor-pointer transition-colors ${
               selectedId === alert.id 
-                ? 'border-red-400 bg-red-50/50' 
-                : 'border-slate-100 hover:border-slate-300'
+                ? 'border-palette-red bg-palette-red bg-opacity-10' 
+                : 'border-palette-light-gray hover:border-text-text5'
             }`}
           >
             <div className="flex justify-between items-start mb-1">
-              <span className="font-bold text-slate-800">{alert.type}</span>
+              <span className="font-bold text-text-primary font-poppins text-size7">{alert.type}</span>
               <Badge score={alert.score} />
             </div>
             
-            <div className="text-sm font-medium text-slate-500 mb-2">
-              <span className="text-slate-700">{alert.accounts.split(',').length} Accounts involved:</span> {alert.accounts}
+            <div className="text-size6 font-medium text-text-text5 mb-2">
+              <span className="text-text-text4">{alert.accounts.split(',').length} Accounts involved:</span> {alert.accounts}
             </div>
             
-            <div className="flex justify-between items-center text-xs text-slate-400">
+            <div className="flex justify-between items-center text-size3 text-text-text5">
               <span>{alert.id}</span>
               <span>{alert.time}</span>
             </div>

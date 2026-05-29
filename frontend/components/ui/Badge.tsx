@@ -3,16 +3,17 @@ interface BadgeProps {
 }
 
 export default function Badge({ score }: BadgeProps) {
-  let bgColor = 'bg-green-100 text-green-700 border-green-200';
+  // High risk: red, Medium risk: secondary/dark red, Low risk: blue
+  let bgColor = 'bg-palette-blue text-text-secondary';
   
   if (score > 80) {
-    bgColor = 'bg-red-100 text-red-700 border-red-200';
+    bgColor = 'bg-palette-red text-text-secondary';
   } else if (score >= 60) {
-    bgColor = 'bg-amber-100 text-amber-700 border-amber-200';
+    bgColor = 'bg-bg-secondary text-text-secondary';
   }
 
   return (
-    <span className={`px-2 py-0.5 rounded-full text-xs font-semibold border ${bgColor}`}>
+    <span className={`px-2 py-0.5 rounded-md text-size3 font-semibold border ${bgColor}`}>
       Risk {score}
     </span>
   )

@@ -9,10 +9,10 @@ interface CardProps {
 
 export default function Card({ title, subtitle, children, className = '' }: CardProps) {
   return (
-    <div className={`bg-white rounded-xl border border-gray-200 p-4 shadow-sm flex flex-col ${className}`}>
+    <div className={`bg-bg-primary rounded-lg border border-palette-light-gray p-4 shadow-md flex flex-col ${className}`}>
       <div className="mb-4">
-        <h3 className="text-lg font-bold text-gray-800">{title}</h3>
-        {subtitle && <p className="text-sm text-gray-500">{subtitle}</p>}
+        <h3 className="text-size8 font-bold text-text-primary font-poppins">{title}</h3>
+        {subtitle && <p className="text-size6 text-text-text4 font-poppins">{subtitle}</p>}
       </div>
       <div className="flex-1">
         {children}

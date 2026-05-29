@@ -47,26 +47,26 @@ export default function MetricCards({ metrics }: { metrics?: Metrics }) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-      <Card title="Active Alerts" className="border-red-200 bg-red-50/30">
-        <div className="text-4xl font-extrabold text-red-600">{counts.alerts}</div>
-        <p className="text-sm font-medium text-red-500 mt-1 flex items-center">
+      <Card title="Active Alerts" className="border-palette-red bg-palette-red bg-opacity-5">
+        <div className="text-4xl font-extrabold text-palette-red">{counts.alerts}</div>
+        <p className="text-size6 font-medium text-palette-red mt-1 flex items-center">
           +2 in last hour
         </p>
       </Card>
       
-      <Card title="Transactions Analysed" className="border-blue-200">
-        <div className="text-4xl font-extrabold text-blue-900">{counts.txns.toLocaleString()}</div>
-        <p className="text-sm font-medium text-gray-500 mt-1">Today</p>
+      <Card title="Transactions Analysed" className="border-palette-blue">
+        <div className="text-4xl font-extrabold text-palette-blue">{counts.txns.toLocaleString()}</div>
+        <p className="text-size6 font-medium text-text-text5 mt-1">Today</p>
       </Card>
       
-      <Card title="Avg Network Risk" className="border-amber-200">
-        <div className="text-4xl font-extrabold text-amber-600">{counts.risk}</div>
-        <p className="text-sm font-medium text-gray-500 mt-1">Threshold: 65</p>
+      <Card title="Avg Network Risk" className="border-bg-secondary">
+        <div className="text-4xl font-extrabold text-bg-secondary">{counts.risk}</div>
+        <p className="text-size6 font-medium text-text-text5 mt-1">Threshold: 65</p>
       </Card>
       
-      <Card title="Accounts Flagged" className="border-purple-200">
-        <div className="text-4xl font-extrabold text-purple-700">{counts.accounts}</div>
-        <p className="text-sm font-medium text-gray-500 mt-1">Pending FIU Action</p>
+      <Card title="Accounts Flagged" className="border-text-text3">
+        <div className="text-4xl font-extrabold text-text-text3">{counts.accounts}</div>
+        <p className="text-size6 font-medium text-text-text5 mt-1">Pending FIU Action</p>
       </Card>
     </div>
   )
