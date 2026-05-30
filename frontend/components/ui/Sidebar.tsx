@@ -36,15 +36,6 @@ export default function Sidebar() {
 
         {/* Scrollable content */}
         <div className="flex-1 overflow-y-auto px-2 py-4">
-          {/* Investigation section */}
-          <SidebarSection title="Investigation" collapsed={collapsed}>
-            <SidebarLink href="/dashboard/overview" label="Overview" icon="ti-layout-dashboard" collapsed={collapsed} />
-            <SidebarLink href="/dashboard/graph" label="Graph explorer" icon="ti-topology-star" collapsed={collapsed} />
-            <SidebarLink href="/dashboard/replay" label="Temporal replay" icon="ti-player-play" collapsed={collapsed} />
-            <SidebarLink href="/dashboard/story" label="Fraud story engine" icon="ti-message-chatbot" collapsed={collapsed} />
-            <SidebarLink href="/dashboard/fiu" label="FIU reports" icon="ti-file-check" collapsed={collapsed} />
-          </SidebarSection>
-
           {/* Cases section */}
           {!collapsed && (
             <SidebarSection title="Recent cases" defaultOpen={true}>
