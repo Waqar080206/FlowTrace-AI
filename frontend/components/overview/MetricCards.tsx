@@ -46,7 +46,7 @@ export default function MetricCards({ metrics }: { metrics?: Metrics }) {
   }, [target.alerts, target.txns_analysed, target.avg_risk, target.accounts_flagged])
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6">
       <Card title="Active Alerts" className="border-palette-red bg-palette-red bg-opacity-5">
         <div className="text-4xl font-extrabold text-palette-red">{counts.alerts}</div>
         <p className="text-size6 font-medium text-palette-red mt-1 flex items-center">

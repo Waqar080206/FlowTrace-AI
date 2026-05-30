@@ -1,16 +1,12 @@
-import TabNav from '../../components/ui/TabNav'
 import Sidebar from '../../components/ui/Sidebar'
+import { SidebarProvider } from '../../components/ui/SidebarContext'
+import DashboardShell from '../../components/dashboard/DashboardShell'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <SidebarProvider>
       <Sidebar />
-      <main className="min-h-screen bg-bg-primary flex flex-col ml-0 lg:ml-56">
-        <TabNav />
-        <div className="flex-1 p-6">
-          {children}
-        </div>
-      </main>
-    </>
+      <DashboardShell>{children}</DashboardShell>
+    </SidebarProvider>
   )
 }

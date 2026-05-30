@@ -73,6 +73,7 @@ function GraphExplorerContent() {
   const caseId = searchParams.get('case_id') ?? 'CR-0847'
 
   const [graphData, setGraphData] = useState<GraphData>(DEMO_GRAPH_DATA)
+  const [nodePositions, setNodePositions] = useState<GraphNode[]>(DEMO_GRAPH_DATA.nodes)
   const [selectedNode, setSelectedNode] = useState<SelectedNodeData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -105,9 +106,11 @@ function GraphExplorerContent() {
         }
 
         setGraphData(normalizedData)
+        setNodePositions(normalizedData.nodes)
       } catch (err) {
         console.log("Could not fetch graph data, using demo data.")
         setGraphData(DEMO_GRAPH_DATA)
+        setNodePositions(DEMO_GRAPH_DATA.nodes)
       } finally {
         setLoading(false)
       }
@@ -116,7 +119,7 @@ function GraphExplorerContent() {
   }, [caseId])
 
   const handleNodeClick = (nodeId: string) => {
-    const node = graphData.nodes.find((n) => n.id === nodeId)
+    const node = nodePositions.find((n) => n.id === nodeId)
     if (node) {
       setSelectedNode({
         id: node.id,
@@ -148,12 +151,13 @@ function GraphExplorerContent() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-3 space-y-6">
           {/* Graph Canvas */}
-          <div className="bg-bg-primary rounded-lg border border-palette-light-gray p-4">
+          <div className="bg-bg-primary rounded-lg border border-palette-light-gray p-3 sm:p-4 min-w-0 overflow-hidden">
             <GraphCanvas
-              nodes={graphData.nodes}
+              nodes={nodePositions}
               edges={graphData.edges}
               selectedNode={selectedNode?.id ?? null}
               onNodeClick={handleNodeClick}
+              onNodesChange={setNodePositions}
             />
           </div>
 

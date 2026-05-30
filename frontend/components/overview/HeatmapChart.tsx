@@ -27,12 +27,18 @@ export default function HeatmapChart() {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { position: 'right' }
+          legend: {
+            position: 'bottom',
+            labels: { boxWidth: 12, font: { size: 11 } },
+          },
         },
         scales: {
-          x: { stacked: true },
-          y: { stacked: true }
-        }
+          x: {
+            stacked: true,
+            ticks: { maxRotation: 45, minRotation: 0, autoSkip: true, maxTicksLimit: 8 },
+          },
+          y: { stacked: true },
+        },
       }
     })
 
@@ -40,9 +46,9 @@ export default function HeatmapChart() {
   }, [])
 
   return (
-    <Card title="Fraud Instances (Branch x Channel)" className="h-80">
-      <div className="relative h-full w-full">
-        <canvas ref={canvasRef} />
+    <Card title="Fraud Instances (Branch x Channel)" className="h-64 sm:h-80 min-w-0">
+      <div className="relative h-full w-full min-w-0 overflow-hidden">
+        <canvas ref={canvasRef} className="max-w-full" />
       </div>
     </Card>
   )
