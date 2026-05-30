@@ -97,21 +97,30 @@ export default function GraphCanvas({ nodes, edges, selectedNode, onNodeClick }:
     })
   }, [nodes, edges, selectedNode, hoveredNode])
 
-  const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleCanvasMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current
     if (!canvas) return
 
     const rect = canvas.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
+    const scaleX = canvas.width / rect.width
+    const scaleY = canvas.height / rect.height
+    const x = (e.clientX - rect.left) * scaleX
+    const y = (e.clientY - rect.top) * scaleY
 
-    // Check if click is on a node
-    nodes.forEach((node) => {
+    let closestNode = null
+    let minDistance = Infinity
+
+    for (const node of nodes) {
       const distance = Math.sqrt(Math.pow(x - node.x, 2) + Math.pow(y - node.y, 2))
-      if (distance < 35) {
-        onNodeClick(node.id)
+      if (distance <= 35 && distance < minDistance) {
+        minDistance = distance
+        closestNode = node.id
       }
-    })
+    }
+
+    if (closestNode) {
+      onNodeClick(closestNode)
+    }
   }
 
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -119,19 +128,24 @@ export default function GraphCanvas({ nodes, edges, selectedNode, onNodeClick }:
     if (!canvas) return
 
     const rect = canvas.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
+    const scaleX = canvas.width / rect.width
+    const scaleY = canvas.height / rect.height
+    const x = (e.clientX - rect.left) * scaleX
+    const y = (e.clientY - rect.top) * scaleY
 
-    let foundNode = null
-    nodes.forEach((node) => {
+    let closestNode = null
+    let minDistance = Infinity
+
+    for (const node of nodes) {
       const distance = Math.sqrt(Math.pow(x - node.x, 2) + Math.pow(y - node.y, 2))
-      if (distance < 35) {
-        foundNode = node.id
+      if (distance <= 35 && distance < minDistance) {
+        minDistance = distance
+        closestNode = node.id
       }
-    })
+    }
 
-    setHoveredNode(foundNode)
-    canvas.style.cursor = foundNode ? 'pointer' : 'default'
+    setHoveredNode(closestNode)
+    canvas.style.cursor = closestNode ? 'pointer' : 'default'
   }
 
   return (
@@ -139,7 +153,7 @@ export default function GraphCanvas({ nodes, edges, selectedNode, onNodeClick }:
       ref={canvasRef}
       width={800}
       height={500}
-      onClick={handleCanvasClick}
+      onMouseDown={handleCanvasMouseDown}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => setHoveredNode(null)}
       className="border border-palette-light-gray rounded-lg bg-bg-primary cursor-default w-full"

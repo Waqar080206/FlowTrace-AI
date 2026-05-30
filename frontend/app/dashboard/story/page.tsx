@@ -7,7 +7,7 @@ import RiskBreakdown from '@/components/story/RiskBreakdown'
 import HybridLayers from '@/components/story/HybridLayers'
 import QueryInput from '@/components/story/QueryInput'
 
-const DEMO_NARRATIVE = `On 14 January 2025 at 09:14 AM, account SB-3311 (Rajan Mehta) initiated a ₹80,000 UPI transfer to SB-7821 (Priya Sharma). 
+const DEMO_NARRATIVE = ` On 14 January 2025 at 09:14 AM, account SB-3311 (Rajan Mehta) initiated a ₹80,000 UPI transfer to SB-7821 (Priya Sharma). 
 
 Over the next 38 minutes, the same amount circulated through a network of 5 accounts in a deliberate pattern:
 - SB-3311 → SB-7821 → SB-4490 → SB-2156 → SB-5603 → back to SB-7821
