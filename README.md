@@ -1,248 +1,79 @@
 # FlowTrace AI — Intelligent Fund Flow Tracking & Fraud Detection
 
-> **iDEA 2.0 | PS3 — Fund Flow Tracking | Union Bank of India**
-> Submission for Phase 2 (POC Stage)
+## Problem Statement
 
----
+This project addresses PS3: Fund Flow Tracking. FlowTrace AI monitors synthetic banking transactions and transforms them into a live graph network, using isolation forest and graph analytics to detect complex fraud patterns (like circular flows and structuring) while automatically generating FIU-IND compliant narratives using Gen-AI.
 
-## What is FlowTrace AI?
+## Live Demo
 
-FlowTrace AI is a real-time fraud detection platform that transforms raw banking transactions into a live graph network. Instead of analysing transactions in isolation (the way traditional AML systems do), FlowTrace maps every account as a node and every transfer as an edge — making it possible to detect fraud patterns that only emerge across relationships.
+🔗 Live Demo: [https://flow-trace-ai.vercel.app/dashboard/overview](https://flow-trace-ai.vercel.app/dashboard/overview)
 
-When the system detects a suspicious pattern, a Gen-AI Fraud Story Engine automatically generates a plain-English investigation narrative and a one-click FIU-IND compliant STR/CTR report — reducing investigation time from 3–5 days to under 2 minutes.
+🎥 Demo Video: [https://youtu.be/F5b8aWaFZkg](https://youtu.be/F5b8aWaFZkg)
 
----
+## Tech Stack
 
-## The Problem It Solves
+• Next.js 14, React, Tailwind CSS (Frontend Dashboard)
+• Flask, Python 3.10+ (Backend API)
+• NetworkX (Graph Engine)
+• Scikit-learn, Isolation Forest (ML Model)
+• OpenAI / Gemini (GenAI Engine)
+• D3.js, React Canvas (Visualisation)
+• Pandas, NumPy (Data Processing)
+• ReportLab/Python (Evidence Export)
 
-Traditional AML engines at banks analyse each transaction in isolation using rule-based thresholds. This approach misses:
+## How to Run Locally
 
-- **Circular transactions** — money leaving an account and returning to it via 3–4 hops within an hour
-- **Structuring** — multiple transfers just below ₹50,000 to avoid mandatory reporting
-- **Rapid layering** — funds moved through 5+ accounts within minutes to obscure the origin
-- **Dormant account abuse** — accounts silent for 12–18 months suddenly used for large pass-through transfers
-- **Profile mismatches** — a farmer account receiving ₹8 lakh via UPI with no business justification
-
-FlowTrace AI sees the full network — not just individual transactions.
-
----
-
-## Architecture Overview
-
-```
-CBS / UPI / NEFT / RTGS
-         ↓
-   Data Ingestion Layer
-   (synthetic_transactions.csv in POC)
-         ↓
-   ┌─────────────────────────────────────┐
-   │         Graph Engine (NetworkX)      │
-   │  Nodes: accounts, customers, branches│
-   │  Edges: transactions with metadata   │
-   └─────────────────────────────────────┘
-         ↓
-   ┌─────────────────────────────────────┐
-   │       4-Layer Hybrid Intelligence    │
-   │  1. Rule engine (velocity, threshold)│
-   │  2. Graph analytics (cycle detection)│
-   │  3. Isolation Forest (anomaly score) │
-   │  4. Gen-AI (narrative + FIU report)  │
-   └─────────────────────────────────────┘
-         ↓
-   Flask REST API (localhost:5000)
-         ↓
-   Next.js 14 Dashboard (localhost:3000)
-   Overview | Graph | Replay | Story | FIU
-```
-
----
-
-## 3. Tech Stack Summary
-
-| LAYER | TECHNOLOGY | WHY THIS CHOICE |
-| --- | --- | --- |
-| **Frontend Dashboard** | Next.js 14 + React + Tailwind CSS | Component-based, fast rendering, highly responsive architecture suitable for heavy visualisations. |
-| **Backend API** | Flask (Python) | Lightweight REST API; allows native integration with Python-based Graph and ML models. |
-| **Graph Engine** | NetworkX (Python) | Open-source, supports directed multigraphs, excellent for identifying circular flows and hop analysis without a DB setup for POC. |
-| **ML Model** | Scikit-learn (Isolation Forest) | Extremely fast anomaly detection; highly effective at scoring unstructured/tabular transaction features without labelled data. |
-| **Visualisation** | React Canvas / D3 / Custom | High-performance rendering of nodes and interactive network graphs in the browser. |
-| **GenAI Engine** | OpenAI/Gemini (via Python) | Translates raw graph anomalies and alerts into structured, plain-English "Fraud Stories" automatically. |
-| **Reporting / Export** | Custom Python builders (`fiu_report.py`) | Programmatic JSON/PDF-ready generation to instantly create FIU-IND compliant STR/CTR reports. |
-| **Data Storage** | CSV / In-Memory (POC) | Rapid prototyping with pandas; production version will transition to PostgreSQL + Neo4j. |
-
----
-
-## Quickstart — Run Locally in 5 Steps
-
-### Prerequisites
-
-- Python 3.10+
-- Node.js 18+
-- An OpenAI or Gemini API key (optional — demo works without it using fallback narratives)
-
-### Step 1 — Clone and install
-
-```bash
-git clone https://github.com/your-team/flowtrace-ai.git
-cd flowtrace-ai
-```
-
-### Step 2 — Backend setup
-
-```bash
-cd backend
-pip install -r requirements.txt
-```
-
-Create a `.env` file in the `backend/` folder:
-
-```
-OPENAI_API_KEY=sk-your-key-here
-```
-
-### Step 3 — Generate synthetic data & train model
-
-```bash
-python data/generate_synthetic.py
-# Creates data/synthetic_transactions.csv with 10,000 rows (800 injected fraud)
-
-python ml_model.py
-# Trains Isolation Forest and saves models/isolation_forest.pkl
-```
-
-### Step 4 — Start the backend
-
-```bash
-python app.py
-# Flask running on http://localhost:5000
-```
-
-### Step 5 — Start the frontend (new terminal)
-
-```bash
-cd ../frontend
-npm install
-npm run dev
-# Next.js running on http://localhost:3000
-```
-
-Open [http://localhost:3000](http://localhost:3000) — you will land on the Overview dashboard.
-
----
-
-## Libraries & Dependencies
-
-### Backend (Python)
-
-| Library | Version | Purpose |
-|---|---|---|
-| flask | 3.0.0 | REST API server |
-| flask-cors | 4.0.0 | Cross-origin requests from Next.js |
-| networkx | 3.2.1 | Graph construction and cycle detection |
-| scikit-learn | 1.4.0 | Isolation Forest anomaly detection |
-| pandas | 2.1.4 | Data loading and manipulation |
-| numpy | 1.26.3 | Numerical operations |
-| openai | 1.12.0 | Gen-AI narrative generation |
-| joblib | 1.3.2 | Model serialisation (.pkl) |
-| python-dotenv | 1.0.0 | Environment variable loading |
-
-### Frontend (JavaScript)
-
-| Library | Version | Purpose |
-|---|---|---|
-| next | 14.x | App framework with App Router |
-| react | 18.x | UI rendering |
-| typescript | 5.x | Type safety |
-| tailwindcss | 3.x | Styling |
-| chart.js | 4.x | Transaction volume and heatmap charts |
-| d3 | 7.x | Force-directed graph layout |
-
----
-
-## Synthetic Dataset
-
-The dataset is generated by `backend/data/generate_synthetic.py`. It creates `synthetic_transactions.csv` with 10,000 rows across 500 synthetic accounts.
-
-### Schema
-
-| Column | Type | Description |
-|---|---|---|
-| txn_id | string | Unique transaction ID |
-| timestamp | datetime | Random within last 90 days |
-| from_acct | string | Sender account ID |
-| to_acct | string | Receiver account ID |
-| amount | float | Log-normal distribution, mean ₹25,000 |
-| channel | string | UPI (40%), NEFT (30%), RTGS (15%), IMPS (15%) |
-| branch | string | One of 5 Union Bank branches |
-| acct_type | string | SB / CA / CC |
-| kyc_status | string | verified / pending |
-| declared_income | float | ₹15,000 – ₹5,00,000 |
-| is_fraud | int | 0 = normal, 1 = injected fraud (label only) |
-
-### Injected fraud patterns (800 rows total)
-
-- 200 rows — circular transactions (round-trip within 2 hours)
-- 200 rows — structuring (₹45,000–₹49,999, 5+ transfers, 3 days)
-- 200 rows — dormant account reactivation (180+ day gap then high-value transfer)
-- 200 rows — rapid layering (5+ hops, <5% amount reduction per hop)
-
-To regenerate the dataset from scratch:
-
-```bash
-python backend/data/generate_synthetic.py
-```
-
----
+1. Clone the repo: `git clone https://github.com/your-team/flowtrace-ai.git`
+2. Enter frontend and install dependencies: `cd flowtrace-ai/frontend && npm install`
+3. Enter backend and set up: `cd ../backend && pip install -r requirements.txt`
+4. Set environment variable: Create `.env` in `backend/` and add `OPENAI_API_KEY=sk-your-key-here`
+5. Generate synthetic data & train the model: `python data/generate_synthetic.py` and `python ml_model.py`
+6. Start the backend: `python app.py` (Runs on http://localhost:5000)
+7. Start the frontend: Open a new terminal, `cd frontend`, run `npm run dev`
+8. Open browser at: `http://localhost:3000`
 
 ## Project Structure
 
-```
-flowtrace-ai/
-├── frontend/          ← Next.js 14, TypeScript, Tailwind
-│   ├── app/           ← App Router pages and API route handlers
-│   ├── components/    ← Feature-grouped React components
-│   └── lib/           ← Shared types, constants, fetch helper
-├── backend/           ← Flask, NetworkX, scikit-learn
-│   ├── data/          ← Synthetic data generator
-│   └── models/        ← Saved Isolation Forest .pkl
-├── notebooks/         ← Jupyter notebooks for D2 demo evidence
-└── docs/              ← D1, D3, D5 deliverables
-```
+/frontend/ — Next.js 14 web application, App router, components, and styling
+/backend/app.py — Main Flask REST API application
+/backend/data/ — Synthetic dataset generation script (`generate_synthetic.py`) and generated CSVs
+/backend/models/ — Saved scikit-learn Isolation Forest model files (.pkl)
+/backend/fiu_report.py & genai_engine.py — Report generators and AI story builders
+/backend/graph_engine.py & fraud_patterns.py — NetworkX logic and fraud typologies
 
-See [frontend/FRONTEND.md](./frontend/FRONTEND.md) and [backend/BACKEND.md](./backend/BACKEND.md) for detailed file-by-file documentation.
+## Dataset
 
----
+All data is 100% synthetic, generated by our team using `backend/data/generate_synthetic.py`. It simulates 10,000 transactions across 500 accounts over 90 days, including:
+• Sender, receiver, amount, timestamp, and channel (UPI/NEFT/RTGS/IMPS)
+• Branch ID, account type, KYC status, and declared income
+• Anomalous patterns injected for ~800 rows representing circular transactions, structuring, rapid layering, and dormant account abuse.
+
+No real bank data was used.
+
+## Model Performance (on Synthetic Test Set)
+
+Isolation Forest:
+• Precision: 0.88 | Recall: 0.81 | F1: 0.84
+• False Positive Rate: 4.8%
+
+Note: These results are on synthetic data. Performance on real bank data would require re-training and fine-tuning.
 
 ## Known Limitations
 
-- The Isolation Forest model is trained on synthetic data only. In production it would be retrained on real CBS transaction history.
-- The Gen-AI narrative engine requires an OpenAI API key. Without it, hardcoded fallback narratives are shown — sufficient for the POC demo.
-- The graph explorer is optimised for up to 500 accounts. Production would use Neo4j for scale.
-- All data is synthetic and does not represent any real Union Bank customer.
-- Real-time streaming from CBS is simulated by loading from CSV on startup.
-
----
-
-## Deliverable Links
-
-| Deliverable | Link |
-|---|---|
-| D1 — Problem + Solution Brief | [docs/D1_problem_solution_brief.docx](./docs/D1_problem_solution_brief.docx) |
-| D2 — Technical Demo Video | [YouTube (Unlisted)](https://youtube.com/placeholder) |
-| D3 — Technical Architecture | [docs/D3_technical_architecture.docx](./docs/D3_technical_architecture.docx) |
-| D4 — GitHub Repository | This repo |
-| D5 — Pitch Video + Deck | [YouTube (Unlisted)](https://youtube.com/placeholder) · [docs/D5_pitch_deck.pdf](./docs/D5_pitch_deck.pdf) |
-
----
+• Trained only on synthetic data; would need real transaction data from CBS for production use.
+• The Gen-AI narrative engine requires an API key. Without it, hardcoded fallback narratives are shown.
+• Current in-memory graph explorer (NetworkX) is optimised for up to 500 accounts. Production would use Neo4j for scale.
+• Real-time streaming is currently simulated by loading from CSV files on startup.
 
 ## Team
 
-| Name | Role |
-|---|---|
-| [Name 1] | Backend, ML, Graph Engine |
-| [Name 2] | Frontend, UI, Dashboard |
-| [Name 3] | Gen-AI, FIU Reports, Documentation |
+Waqar Akhtar - Frontend & ML Lead  
+Ishu Singh - Backend  
+Prithvi Kaushik - Research & Python Dev 
 
----
+## Contact
 
-*Built for iDEA 2.0 — Union Bank of India Hackathon, Phase 2*
+Team Name: rabdi-kulfi
+Institute: University School of Automation and Robotics (USAR), Guru Gobind Singh Indraprastha University
+Email: syed.waqar.akhtar08@gmail.com
+iDEA 2.0 Phase 2 Submission
