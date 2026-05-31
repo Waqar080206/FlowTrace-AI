@@ -57,6 +57,21 @@ CBS / UPI / NEFT / RTGS
 
 ---
 
+## 3. Tech Stack Summary
+
+| LAYER | TECHNOLOGY | WHY THIS CHOICE |
+| --- | --- | --- |
+| **Frontend Dashboard** | Next.js 14 + React + Tailwind CSS | Component-based, fast rendering, highly responsive architecture suitable for heavy visualisations. |
+| **Backend API** | Flask (Python) | Lightweight REST API; allows native integration with Python-based Graph and ML models. |
+| **Graph Engine** | NetworkX (Python) | Open-source, supports directed multigraphs, excellent for identifying circular flows and hop analysis without a DB setup for POC. |
+| **ML Model** | Scikit-learn (Isolation Forest) | Extremely fast anomaly detection; highly effective at scoring unstructured/tabular transaction features without labelled data. |
+| **Visualisation** | React Canvas / D3 / Custom | High-performance rendering of nodes and interactive network graphs in the browser. |
+| **GenAI Engine** | OpenAI/Gemini (via Python) | Translates raw graph anomalies and alerts into structured, plain-English "Fraud Stories" automatically. |
+| **Reporting / Export** | Custom Python builders (`fiu_report.py`) | Programmatic JSON/PDF-ready generation to instantly create FIU-IND compliant STR/CTR reports. |
+| **Data Storage** | CSV / In-Memory (POC) | Rapid prototyping with pandas; production version will transition to PostgreSQL + Neo4j. |
+
+---
+
 ## Quickstart — Run Locally in 5 Steps
 
 ### Prerequisites
