@@ -9,6 +9,7 @@ interface ReplayControlsProps {
   onPlay: () => void
   onPause: () => void
   onStep: (step: number) => void
+  activeAmount?: number
 }
 
 export default function ReplayControls({
@@ -18,6 +19,7 @@ export default function ReplayControls({
   onPlay,
   onPause,
   onStep,
+  activeAmount,
 }: ReplayControlsProps) {
   const [localStep, setLocalStep] = useState(currentStep)
 
@@ -56,12 +58,12 @@ export default function ReplayControls({
   }
 
   return (
-    <div className="bg-bg-primary border border-palette-light-gray rounded-lg p-4 space-y-4">
-      <div className="flex items-center justify-between">
+    <div className="bg-bg-primary border border-palette-light-gray rounded-lg p-3 sm:p-4 space-y-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <span className="text-size6 font-semibold text-text-primary font-poppins">
           Step {currentStep} / {totalSteps}
         </span>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-center sm:justify-end gap-2 flex-wrap">
           <button
             onClick={handleReset}
             className="p-2 rounded-lg hover:bg-bg-secondary text-text-text5 hover:text-text-primary transition-colors"
@@ -78,12 +80,12 @@ export default function ReplayControls({
           </button>
           <button
             onClick={handlePlayPause}
-            className={`px-4 py-2 rounded-lg font-semibold text-text-secondary transition-colors flex items-center gap-2 ${
+            className={`px-3 sm:px-4 py-2 rounded-lg font-semibold text-text-secondary transition-colors flex items-center gap-2 text-size5 sm:text-size6 ${
               isPlaying ? 'bg-palette-red hover:bg-palette-red/90' : 'bg-palette-blue hover:bg-palette-blue/90'
             }`}
           >
             <i className={`ti ${isPlaying ? 'ti-player-pause' : 'ti-player-play'}`}></i>
-            {isPlaying ? 'Pause' : 'Play'}
+            <span className="hidden sm:inline">{isPlaying ? 'Pause' : 'Play'}</span>
           </button>
           <button
             onClick={handleNext}
@@ -117,7 +119,7 @@ export default function ReplayControls({
           ? 'Press Play to watch the transaction flow step by step'
           : currentStep === totalSteps
             ? 'Circular transaction complete!'
-            : `Watching hop ${currentStep}: ₹${(80000 - currentStep * 2000).toLocaleString()} transfer`}
+            : `Watching hop ${currentStep}: ₹${(activeAmount ?? 80000 - currentStep * 2000).toLocaleString()} transfer`}
       </p>
     </div>
   )

@@ -31,16 +31,16 @@ export default async function OverviewPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 min-w-0">
       <MetricCards metrics={metrics} />
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="col-span-2 flex flex-col gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 min-w-0">
+        <div className="lg:col-span-2 flex flex-col gap-4 sm:gap-6 min-w-0">
           <TxnChart />
           <HeatmapChart />
         </div>
         
-        <div className="col-span-1">
+        <div className="col-span-1 min-h-0">
           <AlertQueue alerts={alerts} />
         </div>
       </div>

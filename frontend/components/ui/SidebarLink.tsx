@@ -8,15 +8,17 @@ interface SidebarLinkProps {
   label: string
   icon: string
   collapsed?: boolean
+  onNavigate?: () => void
 }
 
-export default function SidebarLink({ href, label, icon, collapsed = false }: SidebarLinkProps) {
+export default function SidebarLink({ href, label, icon, collapsed = false, onNavigate }: SidebarLinkProps) {
   const pathname = usePathname()
   const isActive = pathname === href || pathname.startsWith(href + '/')
 
   return (
     <Link
       href={href}
+      onClick={onNavigate}
       className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
         isActive
           ? 'bg-bg-secondary text-text-primary border-l-4 border-bg-bg4'

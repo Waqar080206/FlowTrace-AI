@@ -20,7 +20,7 @@ export default function PatternTags({ patterns }: PatternTagsProps) {
           {patterns.map((pattern, idx) => (
             <div
               key={idx}
-              className="px-3 py-2 bg-bg-secondary text-text-primary rounded-lg text-size6 font-semibold font-poppins flex items-center gap-2 hover:bg-palette-red hover:text-text-secondary transition-colors"
+              className="px-3 py-2 bg-bg-secondary text-text-primary rounded-lg text-size5 sm:text-size6 font-semibold font-poppins flex items-center gap-2 hover:bg-palette-red hover:text-text-secondary transition-colors break-words"
               title={pattern.detail}
             >
               <span>{pattern.emoji}</span>

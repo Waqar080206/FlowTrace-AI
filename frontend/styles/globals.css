@@ -6,6 +6,16 @@
 .risk-medium { color: #EF9F27; }
 .risk-low { color: #1D9E75; }
 
+html, body {
+  overflow-x: hidden;
+}
+
 canvas { display: block; }
-::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+}

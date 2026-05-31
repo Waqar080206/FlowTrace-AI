@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useState, useEffect } from 'react'
+import { Suspense, useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import ReplayCanvas from '@/components/replay/ReplayCanvas'
 import TxnTable from '@/components/replay/TxnTable'
@@ -69,21 +69,19 @@ function TemporalReplayContent() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [loading, setLoading] = useState(true)
 
+  const totalSteps = DEMO_REPLAY_DATA.transactions.length
+
   useEffect(() => {
-    // Simulate API call
-    const timer = setTimeout(() => {
-      setLoading(false)
-    }, 500)
+    const timer = setTimeout(() => setLoading(false), 500)
     return () => clearTimeout(timer)
   }, [caseId])
 
-  // Auto-play animation
   useEffect(() => {
     if (!isPlaying) return
 
     const interval = setInterval(() => {
       setCurrentStep((prev) => {
-        if (prev >= DEMO_REPLAY_DATA.transactions.length) {
+        if (prev >= totalSteps) {
           setIsPlaying(false)
           return prev
         }
@@ -92,48 +90,68 @@ function TemporalReplayContent() {
     }, 1500)
 
     return () => clearInterval(interval)
-  }, [isPlaying])
+  }, [isPlaying, totalSteps])
 
-  const getActiveEdge = () => {
-    if (currentStep === 0 || currentStep > DEMO_REPLAY_DATA.transactions.length) return null
+  const getActiveEdge = useCallback(() => {
+    if (currentStep === 0 || currentStep > totalSteps) return null
     const txn = DEMO_REPLAY_DATA.transactions[currentStep - 1]
     return { from: txn.from, to: txn.to }
+  }, [currentStep, totalSteps])
+
+  const handlePlay = () => {
+    if (currentStep >= totalSteps) {
+      setCurrentStep(1)
+    } else if (currentStep === 0) {
+      setCurrentStep(1)
+    }
+    setIsPlaying(true)
+  }
+
+  const handleStep = (step: number) => {
+    setCurrentStep(step)
+    if (step >= totalSteps) {
+      setIsPlaying(false)
+    }
   }
 
   if (loading) {
     return <div className="text-center py-12 text-text-text5">Loading replay...</div>
   }
 
+  const activeTxn = currentStep > 0 ? DEMO_REPLAY_DATA.transactions[currentStep - 1] : null
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 min-w-0">
       <div>
         <h1 className="text-size9 font-bold text-text-primary font-poppins">Temporal Replay</h1>
         <p className="text-text-text5 text-size6 mt-1">Case {caseId} — Step-by-step transaction visualization</p>
       </div>
 
-      {/* Canvas */}
-      <div className="bg-bg-primary rounded-lg border border-palette-light-gray p-4">
+      <div className="bg-bg-primary rounded-lg border border-palette-light-gray p-3 sm:p-4 min-w-0 overflow-hidden">
         <ReplayCanvas
           nodes={DEMO_REPLAY_DATA.nodes}
           edges={DEMO_REPLAY_DATA.transactions.map((t) => ({ from: t.from, to: t.to }))}
           activeEdge={getActiveEdge()}
           currentStep={currentStep}
-          totalSteps={DEMO_REPLAY_DATA.transactions.length}
+          totalSteps={totalSteps}
         />
       </div>
 
-      {/* Controls */}
       <ReplayControls
         currentStep={currentStep}
-        totalSteps={DEMO_REPLAY_DATA.transactions.length}
+        totalSteps={totalSteps}
         isPlaying={isPlaying}
-        onPlay={() => setIsPlaying(true)}
+        onPlay={handlePlay}
         onPause={() => setIsPlaying(false)}
-        onStep={setCurrentStep}
+        onStep={handleStep}
+        activeAmount={activeTxn?.amount}
       />
 
-      {/* Transaction Table */}
-      <TxnTable transactions={DEMO_REPLAY_DATA.transactions} currentStep={currentStep} />
+      <TxnTable
+        transactions={DEMO_REPLAY_DATA.transactions}
+        currentStep={currentStep}
+        onStepSelect={handleStep}
+      />
     </div>
   )
 }

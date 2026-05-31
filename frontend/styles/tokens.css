@@ -291,6 +291,38 @@ pre {
   color: var(--color-text-secondary);
 }
 
+/* Dark mode — invert surfaces & text only; accent palette unchanged */
+.dark {
+  --color-bg-primary: #101010;
+  --color-text-primary: #F1F1F1;
+  --color-text-4: #D3D3D3;
+  --color-text-5: #AAAAAA;
+  --color-palette-light-gray: #2A2A2A;
+  --color-palette-white: #F1F1F1;
+}
+
+.dark th {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: var(--color-palette-light-gray);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--color-bg-4);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--color-bg-secondary);
+}
+
+.dark code {
+  background-color: var(--color-palette-light-gray);
+  color: var(--color-text-primary);
+}
+
 /* Animations */
 @keyframes fadeIn {
   from {

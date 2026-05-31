@@ -48,7 +48,14 @@ export default function TxnChart() {
         responsive: true,
         maintainAspectRatio: false,
         interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { boxWidth: 12, font: { size: 11 } },
+          },
+        },
         scales: {
+          x: { ticks: { maxRotation: 45, autoSkip: true, maxTicksLimit: 10 } },
           y: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Volume' } },
           y1: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false }, min: 0, max: 100, title: { display: true, text: 'Risk Score' } }
         }
@@ -59,9 +66,9 @@ export default function TxnChart() {
   }, [])
 
   return (
-    <Card title="Traffic Volume vs Anomaly Score (Live)" className="h-80">
-      <div className="relative h-full w-full">
-        <canvas ref={canvasRef} />
+    <Card title="Traffic Volume vs Anomaly Score (Live)" className="h-64 sm:h-80 min-w-0">
+      <div className="relative h-full w-full min-w-0 overflow-hidden">
+        <canvas ref={canvasRef} className="max-w-full" />
       </div>
     </Card>
   )
